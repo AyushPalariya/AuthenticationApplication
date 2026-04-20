@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — AuthApp</title>
+  <link rel="stylesheet" href="../css/auth.css" />
+  <style>
+    /* ── Index-page specific styles ──────────────────────── */
+    body {
+      display: block;
+      overflow: auto;
+      background: var(--bg-base);
+    }
+
+    .dashboard {
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(17,17,24,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-head);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-brand .logo-mini {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #9b67ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: var(--font-head);
+      color: #fff;
+      border: 2px solid var(--border);
+    }
+
+    .nav-name {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .nav-role {
+      font-size: 0.7rem;
+      color: var(--accent-soft);
+      background: rgba(108,99,255,0.12);
+      border: 1px solid rgba(108,99,255,0.25);
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-family: var(--font-head);
+    }
+
+    .btn-logout {
+      padding: 8px 18px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-head);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-logout:hover {
+      border-color: var(--error);
+      color: var(--error);
+      background: rgba(255,90,122,0.06);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 72px 32px 40px;
+      text-align: center;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 14px;
+      background: rgba(108,99,255,0.1);
+      border: 1px solid rgba(108,99,255,0.25);
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent-soft);
+      font-family: var(--font-head);
+      letter-spacing: 0.04em;
+      margin-bottom: 24px;
+    }
+
+    .hero h2 {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .hero h2 span {
+      background: linear-gradient(135deg, var(--accent) 0%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      max-width: 900px;
+      margin: 48px auto 0;
+      padding: 0 32px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px var(--accent-glow);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .stat-card:hover::before { opacity: 1; }
+
+    .stat-icon { font-size: 28px; margin-bottom: 10px; }
+
+    .stat-val {
+      font-family: var(--font-head);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .stat-lbl {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* Info card */
+    .info-section {
+      max-width: 900px;
+      margin: 36px auto 0;
+      padding: 0 32px 64px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .info-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+    }
+
+    .info-card h3 {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .info-row:last-child { border-bottom: none; }
+
+    .info-row .key { color: var(--text-secondary); }
+    .info-row .val { color: var(--text-primary); font-weight: 500; }
+
+    .badge-enabled {
+      padding: 3px 10px;
+      background: rgba(34,201,160,0.12);
+      border: 1px solid rgba(34,201,160,0.3);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: var(--success);
+      font-family: var(--font-head);
+      font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      .navbar { padding: 12px 16px; }
+      .hero   { padding: 40px 16px 20px; }
+      .stats-grid, .info-section { padding: 0 16px; padding-bottom: 32px; }
+      .nav-name { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <div class="dashboard">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="nav-brand">
+        <div class="logo-mini">🔐</div>
+        AuthApp
+      </div>
+      <div class="nav-right">
+        <div class="nav-user">
+          <div class="nav-avatar" id="nav-avatar">?</div>
+          <div>
+            <div class="nav-name" id="nav-name">Loading…</div>
+          </div>
+          <span class="nav-role" id="nav-role">—</span>
+        </div>
+        <button class="btn-logout" onclick="logout()">Sign Out</button>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-badge">✓ Authenticated Session</div>
+      <h2>Welcome, <span id="hero-name">there</span>!</h2>
+      <p>You've successfully signed in. Your JWT token is active and ready for API calls.</p>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🔑</div>
+        <div class="stat-val" id="stat-token-len">—</div>
+        <div class="stat-lbl">Token Length (chars)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🛡</div>
+        <div class="stat-val" id="stat-role">—</div>
+        <div class="stat-lbl">Account Role</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-val">Active</div>
+        <div class="stat-lbl">Session Status</div>
+      </div>
+    </div>
+
+    <!-- User Info -->
+    <div class="info-section">
+      <div class="info-card">
+        <h3>Account Details</h3>
+        <div class="info-row">
+          <span class="key">Full Name</span>
+          <span class="val" id="info-name">—</span>
+        </div>
+        <div class="info-row">
+          <span class="key">Username</span>
+          <span class="val" id="info-username">—</span>
+        </div>
+        <div class="info-row">
+          <span class="key">Email</span>
+          <span class="val" id="info-email">—</span>
+        </div>
+        <div class="info-row">
+          <span class="key">Role</span>
+          <span class="val" id="info-role">—</span>
+        </div>
+        <div class="info-row">
+          <span class="key">Account Status</span>
+          <span class="val"><span class="badge-enabled">Enabled</span></span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.dashboard -->
+
+  <script src="../js/auth.js"></script>
+  <script>
+    // Populate page with session data
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = getToken();
+      const user  = getUser();
+
+      // If not logged in, redirect back
+      if (!token) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const name     = user?.name     || user?.username || 'User';
+      const username = user?.username || '—';
+      const email    = user?.email    || '—';
+      const roles    = user?.roles    || [];
+      const roleStr  = roles.map(r => (r.roleName || r.name || r).replace('ROLE_', '')).join(', ') || '—';
+      const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
+      document.getElementById('hero-name').textContent     = name;
+      document.getElementById('nav-name').textContent      = name;
+      document.getElementById('nav-avatar').textContent    = initials;
+      document.getElementById('nav-role').textContent      = roleStr;
+      document.getElementById('info-name').textContent     = name;
+      document.getElementById('info-username').textContent = username;
+      document.getElementById('info-email').textContent    = email;
+      document.getElementById('info-role').textContent     = roleStr;
+      document.getElementById('stat-role').textContent     = roleStr;
+      document.getElementById('stat-token-len').textContent = token.length;
+    });
+  </script>
+</body>
+</html>

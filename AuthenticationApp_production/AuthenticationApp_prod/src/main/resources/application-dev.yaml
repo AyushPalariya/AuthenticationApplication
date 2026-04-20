@@ -1,0 +1,73 @@
+server:
+  port: 8083
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/Auth_Application}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:Ayush@2003}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: AuthHikariCP
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 20000
+      max-lifetime: 1800000
+      idle-timeout: 600000
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:palariyaayush96@gmail.com}
+    password: ${MAIL_PASSWORD:rhfr awiz tskr vbrx}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+
+logging:
+  level:
+    root: INFO
+    com.AuthSecurity: DEBUG
+    org.springframework.security: INFO
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:saiofaldsfsoierjfnn9884jsnavkasfbehwqpofhjashofjaswfpojasfvbafophfiiotorjdladjfbslafonf}
+    issuer: ${JWT_ISSUER:api.authapp.com}
+    access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:4800}
+    refresh-ttl-seconds: ${JWT_REFRESH_TTL_SECONDS:86400}
+    refresh-token-cookie-name: ${JWT_REFRESH_COOKIE_NAME:refreshToken}
+    cookie-secure: ${JWT_COOKIE_SECURE:false}
+    cookie-http-only: ${JWT_COOKIE_HTTP_ONLY:true}
+    cookie-same-site: ${JWT_COOKIE_SAME_SITE:lax}

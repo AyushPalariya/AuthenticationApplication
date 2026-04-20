@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — AuthApp</title>
+  <link rel="stylesheet" href="../css/auth.css" />
+</head>
+<body>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Auth Wrapper -->
+  <div class="auth-wrapper">
+
+    <!-- Brand -->
+    <div class="auth-brand">
+      <div class="logo-icon">🔐</div>
+      <h1>AuthApp</h1>
+      <p>Secure authentication made simple</p>
+    </div>
+
+    <!-- Card -->
+    <div class="auth-card">
+
+      <!-- Tabs -->
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" data-tab="login"    role="tab" aria-selected="true">Sign In</button>
+        <button class="auth-tab"        data-tab="register" role="tab" aria-selected="false">Register</button>
+      </div>
+
+      <!-- ── LOGIN FORM ───────────────────────────────────── -->
+      <form id="login-form" class="auth-form active" novalidate>
+
+        <div class="form-title">Welcome back</div>
+        <div class="form-subtitle">Enter your credentials to continue</div>
+
+        <div class="field-group">
+
+          <!-- Identifier -->
+          <div class="field" data-field="identifier">
+            <label for="login-identifier">Email or Username</label>
+            <div class="input-wrap">
+              <span class="icon">👤</span>
+              <input
+                type="text"
+                id="login-identifier"
+                name="identifier"
+                placeholder="john@example.com or johndoe"
+                autocomplete="username"
+              />
+            </div>
+            <span class="field-error">Email or username is required</span>
+          </div>
+
+          <!-- Password -->
+          <div class="field" data-field="password">
+            <label for="login-password">Password</label>
+            <div class="input-wrap">
+              <span class="icon">🔑</span>
+              <input
+                type="password"
+                id="login-password"
+                name="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                class="has-toggle"
+              />
+              <button type="button" class="eye-toggle" onclick="togglePassword(this)" aria-label="Toggle password">
+                <span>👁</span>
+              </button>
+            </div>
+            <span class="field-error">Password is required</span>
+          </div>
+
+        </div>
+
+        <!-- Forgot -->
+        <div class="field-extras">
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-submit" id="login-btn">
+          <span class="btn-text">Sign In</span>
+          <span class="btn-spinner"><span class="spinner"></span></span>
+        </button>
+
+        <div class="auth-footer">
+          No account?
+          <button type="button" class="link-btn" onclick="switchTab('register')">Create one</button>
+        </div>
+
+      </form>
+
+      <!-- ── REGISTER FORM ────────────────────────────────── -->
+      <form id="register-form" class="auth-form" novalidate>
+
+        <div class="form-title">Create account</div>
+        <div class="form-subtitle">Fill in the details to get started</div>
+
+        <div class="field-group">
+
+          <!-- Name + Username row -->
+          <div class="field-row">
+            <div class="field" data-field="name">
+              <label for="reg-name">Full Name</label>
+              <div class="input-wrap">
+                <span class="icon">📝</span>
+                <input
+                  type="text"
+                  id="reg-name"
+                  name="name"
+                  placeholder="John Doe"
+                  autocomplete="name"
+                />
+              </div>
+              <span class="field-error">Name is required</span>
+            </div>
+
+            <div class="field" data-field="username">
+              <label for="reg-username">Username</label>
+              <div class="input-wrap">
+                <span class="icon">@</span>
+                <input
+                  type="text"
+                  id="reg-username"
+                  name="username"
+                  placeholder="johndoe"
+                  autocomplete="username"
+                />
+              </div>
+              <span class="field-error">Username is required</span>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="field" data-field="email">
+            <label for="reg-email">Email Address</label>
+            <div class="input-wrap">
+              <span class="icon">✉</span>
+              <input
+                type="email"
+                id="reg-email"
+                name="email"
+                placeholder="john@example.com"
+                autocomplete="email"
+              />
+            </div>
+            <span class="field-error">Enter a valid email</span>
+          </div>
+
+          <!-- Password -->
+          <div class="field" data-field="password">
+            <label for="reg-password">Password</label>
+            <div class="input-wrap">
+              <span class="icon">🔑</span>
+              <input
+                type="password"
+                id="reg-password"
+                name="password"
+                placeholder="Min. 6 characters"
+                autocomplete="new-password"
+                class="has-toggle"
+              />
+              <button type="button" class="eye-toggle" onclick="togglePassword(this)" aria-label="Toggle password">
+                <span>👁</span>
+              </button>
+            </div>
+            <div class="strength-bar" id="strength-bar">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <div class="strength-label" id="strength-label"></div>
+            <span class="field-error">Minimum 6 characters</span>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="field" data-field="confirm">
+            <label for="reg-confirm">Confirm Password</label>
+            <div class="input-wrap">
+              <span class="icon">🔒</span>
+              <input
+                type="password"
+                id="reg-confirm"
+                name="confirm"
+                placeholder="Repeat your password"
+                autocomplete="new-password"
+                class="has-toggle"
+              />
+              <button type="button" class="eye-toggle" onclick="togglePassword(this)" aria-label="Toggle password">
+                <span>👁</span>
+              </button>
+            </div>
+            <span class="field-error">Passwords do not match</span>
+          </div>
+
+          <!-- Role -->
+          <div class="field" data-field="role">
+            <label>Account Type</label>
+            <div class="role-select">
+              <div class="role-option">
+                <input type="radio" name="role" id="role-user" value="user" checked />
+                <label for="role-user">👤 User</label>
+              </div>
+              <div class="role-option">
+                <input type="radio" name="role" id="role-admin" value="admin" />
+                <label for="role-admin">🛡 Admin</label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-submit" id="register-btn">
+          <span class="btn-text">Create Account</span>
+          <span class="btn-spinner"><span class="spinner"></span></span>
+        </button>
+
+        <div class="auth-footer">
+          Already have an account?
+          <button type="button" class="link-btn" onclick="switchTab('login')">Sign in</button>
+        </div>
+
+      </form>
+
+    </div><!-- /.auth-card -->
+  </div><!-- /.auth-wrapper -->
+
+  <script src="../js/auth.js"></script>
+</body>
+</html>
