@@ -50,11 +50,11 @@ public class JwtFilter extends OncePerRequestFilter {
                 Jws<Claims> parse = jwtService.parse(token);
                 Claims body = parse.getBody();
                 String email = body.getSubject();
-//user get from database
+                    //user get from database
                 userRepo.findByEmail(email).ifPresent(user ->{
                     //check for user enable or not
                     if(user.isEnable()){
-//get roles of user
+                        //get roles of user
                         List<GrantedAuthority> authorities=user.getRoles()==null?List.of():user.getRoles().stream().map(r->new SimpleGrantedAuthority(r.getName()))
                                 .collect(Collectors.toList());
 

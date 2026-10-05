@@ -74,14 +74,14 @@ public class JwtService {
                 .setSubject(user.getEmail())
                 .setIssuedAt(new Date())
                 .setIssuer(issuer)
-                .setExpiration(new Date(System.currentTimeMillis() + refreshItlSeconds*100))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshItlSeconds*1000))
                 .addClaims(Map.of(
                         "typ", "refresh"
                 ))
                 .signWith(SECRET_KEY)
                 .compact();
     }
-
+    //verifySecretKey//check expirationtime..
     public Jws<Claims> parse(String token) {
         return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
     }
@@ -95,5 +95,11 @@ public class JwtService {
         Claims claims =  parse(token)
                 .getBody();
         return "refresh".equals(claims.get("typ"));
+    }
+    public String getJti(String rfToken){
+       return parse(rfToken).getBody().getId();
+    }
+    public String getUserEmail(String rfToken){
+        return parse(rfToken).getBody().getSubject();
     }
 }
